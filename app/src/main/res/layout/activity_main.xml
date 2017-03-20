@@ -28,6 +28,7 @@
         app:layout_widthPercent="47.25%"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
+        android:src="@drawable/startimage"
         android:layout_centerInParent = "true"/>
 
     <ImageView
