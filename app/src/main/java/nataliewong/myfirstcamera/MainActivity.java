@@ -2,6 +2,7 @@ package nataliewong.myfirstcamera;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity
 {
     private final int MENUACTIVITY_REQUESTCODE = 42;
     private ImageView startImage, previewImage;
+    private Bitmap previewImageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,6 +50,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent activityData)
     {
-        //  TODO: Soon, we'll add the behaviour for displaying a captured image!
+        if (requestCode == MENUACTIVITY_REQUESTCODE && resultCode == Activity.RESULT_OK)
+        {
+            String fileName = activityData.getStringExtra("filename key");
+
+            if (previewImageBitmap != null)
+                previewImageBitmap.recycle();
+
+            previewImageBitmap = BitmapFactory.decodeFile(fileName);
+
+            if (startImage.getVisibility() != ImageView.INVISIBLE)
+                startImage.setVisibility(ImageView.INVISIBLE);
+
+            previewImage.setImageBitmap(previewImageBitmap);
+            previewImage.setRotation(90);
+        }
     }
 }
