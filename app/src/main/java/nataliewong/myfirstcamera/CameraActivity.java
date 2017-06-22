@@ -37,6 +37,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
         jpegCallback = new Camera.PictureCallback()
         {
+            @Override
             public void onPictureTaken(byte[] pictureData, Camera localCamera)
             {
 
