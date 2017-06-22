@@ -68,13 +68,6 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
                     setResult(RESULT_OK, activityData);
                 }
 
-                catch (FileNotFoundException e)
-                {
-                    Toast.makeText(getApplicationContext(), "Unable to take picture.", Toast.LENGTH_LONG).show();
-
-                    setResult(RESULT_CANCELED);
-                }
-
                 catch (IOException e)
                 {
                     Toast.makeText(getApplicationContext(), "Unable to take picture.", Toast.LENGTH_LONG).show();
