@@ -23,6 +23,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     private SurfaceHolder cameraPreviewHolder;
     private Camera.PictureCallback jpegCallback;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -95,6 +96,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         });
     }
 
+    @Override
     public void surfaceCreated(SurfaceHolder holder)
     {
         try
@@ -127,6 +129,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
     }
 
+    @Override
     public void surfaceDestroyed(SurfaceHolder holder)
     {
         if (localCamera != null)
@@ -137,6 +140,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
     }
 
+    @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
     {
         if (cameraPreviewHolder.getSurface() == null) return;
@@ -154,6 +158,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
     }
 
+    @Override
     protected void onPause()
     {
         super.onPause();
@@ -165,6 +170,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
     }
 
+    @Override
     protected void onResume()
     {
         super.onResume();
@@ -195,6 +201,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
     }
 
+    @Override
     public void onBackPressed()
     {
         setResult(RESULT_CANCELED);
