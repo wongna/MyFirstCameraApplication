@@ -18,6 +18,8 @@ import java.util.List;
 
 public class CameraActivity extends AppCompatActivity implements SurfaceHolder.Callback
 {
+    private static final String FILE_NAME = "/sdcard/MyFirstCamera/%d.jpg";
+    private static final String FILE_DIRECTORY = "/sdcard/MyFirstCamera";
 
     private Camera localCamera;
     private SurfaceHolder cameraPreviewHolder;
@@ -42,9 +44,9 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
             {
 
                 FileOutputStream out = null;
-                String fileName = String.format("/sdcard/MyFirstCamera/%d.jpg", System.currentTimeMillis());
+                String fileName = String.format(FILE_NAME, System.currentTimeMillis());
 
-                File targetDir = new File("/sdcard/MyFirstCamera");
+                File targetDir = new File(FILE_DIRECTORY);
                 if (!targetDir.isDirectory())
                     if (!targetDir.mkdir())
                     {
@@ -93,6 +95,56 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     public void surfaceCreated(SurfaceHolder holder)
     {
+        cameraSetup();
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder)
+    {
+        cameraTeardown();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
+    {
+        if (cameraPreviewHolder.getSurface() == null) return;
+
+        localCamera.stopPreview();
+
+        try
+        {
+            localCamera.setPreviewDisplay(cameraPreviewHolder);
+            localCamera.startPreview();
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "Unable to start camera preview.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        cameraTeardown();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        cameraSetup();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    private void cameraSetup()
+    {
         try
         {
             if (localCamera != null)
@@ -123,8 +175,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
     }
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder)
+    private void cameraTeardown()
     {
         if (localCamera != null)
         {
@@ -132,74 +183,6 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
             localCamera.release();
             localCamera = null;
         }
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
-    {
-        if (cameraPreviewHolder.getSurface() == null) return;
-
-        localCamera.stopPreview();
-
-        try
-        {
-            localCamera.setPreviewDisplay(cameraPreviewHolder);
-            localCamera.startPreview();
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(getApplicationContext(), "Unable to start camera preview.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        if (localCamera != null)
-        {
-            localCamera.release();
-            localCamera = null;
-        }
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        if (localCamera == null)
-        {
-            try
-            {
-                localCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-            }
-            catch (RuntimeException e)
-            {
-                Toast.makeText(getApplicationContext(), "Unable to connect to camera.", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            localCamera.setDisplayOrientation(90);
-
-            try
-            {
-                localCamera.setPreviewDisplay(cameraPreviewHolder);
-                localCamera.startPreview();
-            }
-            catch (Exception e)
-            {
-                Toast.makeText(getApplicationContext(), "Unable to start camera preview.", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    @Override
-    public void onBackPressed()
-    {
-        setResult(RESULT_CANCELED);
-        finish();
     }
 
     private Camera.Parameters getLowResolutionParams(Camera localCamera)
