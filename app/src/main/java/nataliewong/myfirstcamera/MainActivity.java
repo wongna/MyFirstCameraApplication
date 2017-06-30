@@ -1,9 +1,11 @@
 package nataliewong.myfirstcamera;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,8 +44,41 @@ public class MainActivity extends AppCompatActivity
         editPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //  TODO: Next time, we'll use this to edit previewImage!
+                if (previewImage == null)
+                {
+                    Toast.makeText(getApplicationContext(), "This feature is unavailable.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.AlertTheme);
+                alertDialogBuilder.setTitle("Edit Current Picture")
+                        .setSingleChoiceItems(R.array.options, 0 ,null)
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which) { dialog.dismiss(); }
+                        })
+                        .setPositiveButton("Submit", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                int selectedItem = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
+
+                                if (selectedItem == 0)
+                                    previewImage.setImageBitmap(previewImageBitmap);
+                                else if (selectedItem == 1)
+                                    previewImage.setImageBitmap(BitmapTransformer.turnUpperRightCornerBlack(previewImageBitmap));
+                                else if (selectedItem == 2)
+                                    previewImage.setImageBitmap(BitmapTransformer.turnGray(previewImageBitmap));
+                                else if (selectedItem == 3)
+                                    previewImage.setImageBitmap(BitmapTransformer.turnBinary(previewImageBitmap, 119));
+                                else
+                                    previewImage.setImageBitmap(BitmapTransformer.convertToLAB(previewImageBitmap));
+
+                                dialog.dismiss();
+                            }
+                        }).show();
             }
+
         });
     }
 

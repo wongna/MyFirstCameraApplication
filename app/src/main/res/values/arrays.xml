@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name = "options">
+        <item>Revert to Original</item>
+        <item>Turn Corner Black</item>
+        <item>Turn Grayscale</item>
+        <item>Turn Binary</item>
+        <item>Convert to LAB</item>
+    </string-array>
+</resources>
